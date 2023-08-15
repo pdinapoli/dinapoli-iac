@@ -1,0 +1,82 @@
+### yaml seed file to change the allowed vlans
+### on eth 1/1-25 - the prc1-esx3001c cluster host trunk ports 
+---
+vlans_allowed:
+  prc1esx3001c:  10,20,924,1008,1012,2000-2014,2016-2017,2019,2022-2030,3001
+  
+trunk_int:
+  Ethernet1/1:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/2:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/3:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/4:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/5:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/6:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/7:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/8:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/9:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/10:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/11:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/12:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/13:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/14:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/15:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/16:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/17:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/18:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/19:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/20:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/21:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/22:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/23:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/24:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"
+  Ethernet1/25:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc1esx3001c}}"

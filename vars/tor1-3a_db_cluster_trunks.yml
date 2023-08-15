@@ -1,0 +1,34 @@
+### yaml seed file to change the allowed vlans
+### on eth 1/24 - 29, 39-40, 14 - the esx-dbcluster host trunk ports 
+---
+vlans_allowed:
+  prc2esxdbcluster: 10,20,60,1010-1012,1600,1710,2000-2020
+  
+trunk_int:
+  Ethernet1/24:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/25:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/26:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/27:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/28:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/29:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/39:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/40:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"
+  Ethernet1/14:
+    mode: trunk
+    trunk_allowed_vlans: "{{vlans_allowed.prc2esxdbcluster}}"

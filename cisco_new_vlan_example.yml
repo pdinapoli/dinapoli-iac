@@ -1,0 +1,23 @@
+### sample playbook to create new vlans on nexus 5K and 6K
+
+
+---
+
+- name: automating nexus 6K vlan definition
+  hosts: all
+  connection: local
+  gather_facts: no
+
+  tasks:
+  
+    - name: create new VLANs on a switch
+      cisco.nxos.nxos_vlan:
+        aggregate:
+        - {vlan_id: 1927, name: mgmt-slc-vips-10.219.27.0/24}
+        - {vlan_id: 1928, name: mgmt-slc-nodes-10.219.28.0/24}
+
+    - name: CYA save the configuration!!
+      nxos_command:
+        commands: copy running-config startup-config
+
+
