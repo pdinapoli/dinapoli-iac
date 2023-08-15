@@ -1,0 +1,18 @@
+### basic playbook to run show ver command on NX-OS devices
+---
+
+- name: run arbitary command
+  hosts: all
+  connection: local
+  gather_facts: no
+ 
+  tasks:
+  - name: issue show version command
+    cisco.nxos.nxos_command:
+      commands:
+      - command: show version | grep "System version"
+    register: command_output
+
+  - name: "Task 2: Display stdout_lines[0]" 
+    debug: 
+      msg:  "{{ command_output.stdout_lines }}"

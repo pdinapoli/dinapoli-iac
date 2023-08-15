@@ -1,0 +1,40 @@
+### Create new DMZ-VIPs and DMZ-Nodes vlans 3000 and 3001 on nexus switches
+### ansible-playbook cisco_new_vlan300-3001.yml -i inventory/cisco/xxxx.ini -l tor1-5a.ptldor02.nweacolo.pvt -k
+
+---
+
+- name: Create vlan 3000, 3001 on nexus switches
+  hosts: all
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: create new VLANs on a switch
+    cisco.nxos.nxos_vlan:
+      aggregate:
+      - {vlan_id: 3000, name: dmz-vips_10.123.40.0/24} 
+      - {vlan_id: 3001, name: dmz-nodes_10.211.20.0/22}
+     
+  - name: create new VLANs on a switch
+    cisco.nxos.nxos_l2_interface:
+      name: port-channel115
+      mode: trunk
+      trunk_vlans: 10,20,30,99,172,924,1008-1010,1012,2000-2014,2016-2017,2019,2022-2030,3000-3001
+      
+  - name: create new VLANs on a switch
+    cisco.nxos.nxos_l2_interface:
+      name: port-channel20
+      mode: trunk
+      trunk_vlans: 2,910,918-920,1002,1013,1015,1121,1123,1125,1134-1135,1138,2000,2003,2006-2007,3000-3001
+
+  - name: create new VLANs on a switch
+    cisco.nxos.nxos_l2_interface:
+      name: port-channel22
+      mode: trunk
+      trunk_vlans: 2,910,918-920,1002,1013,1015,1121,1123,1125,1134-1135,1138,2000,2003,2006-2007,3000-3001
+
+  - name: create new VLANs on a switch
+    cisco.nxos.nxos_l2_interface:
+      name: port-channel24
+      mode: trunk
+      trunk_vlans: 2,910,918-920,1002,1013,1015,1121,1123,1125,1134-1135,1138,2000,2003,2006-2007,3000-3001

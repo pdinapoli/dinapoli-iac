@@ -1,0 +1,33 @@
+---
+### playbook to make it easy to run a single playthat saves the config on a group of devices
+### ansible-playbook cisco_nxos_upgrade.yml -i inventory/cisco/brookwood.ini -l tor2-3a.new.nweacolo.pvt -k
+
+- hosts: all
+  gather_facts: false
+  connection: local
+
+  vars:
+    upgrade_nxos_version:
+
+  tasks:
+    - name: Install OS on N9k
+      check_mode: no
+      cisco.nxos.nxos_install_os: 
+        system_image_file: nxos.9.3.8.bin
+
+    - name: Wait for device to come back up with new image
+      wait_for:
+        port: 22
+        state: started
+        timeout: 500
+        delay: 60
+        host: '{{ inventory_hostname }}'
+
+    - name: Check installed OS for newly installed version
+      nxos_command:
+        commands: [show version | json]
+      register: output
+
+    - assert:
+        that:
+        - output['stdout'][0]['kickstart_ver_str'] == '9.3(8)'
