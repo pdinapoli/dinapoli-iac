@@ -1,0 +1,48 @@
+---
+
+- name: automating nexus switches
+  hosts: all
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: task1 - Create new VLANs on a switch
+    cisco.nxos.nxos_vlan:
+      aggregate:
+      - {vlan_id: 3000, name: dmz-vips_10.219.40.0/24}
+      - {vlan_id: 3001, name: dmz-nodes_10.124.20.0/22}
+      ### adjust the vlan ID and name accordingly
+
+  - name: task2 - disply current L2 trunk config from the device
+    cisco.nxos.nxos_command:
+      commands:
+      - show run int port-ch2 | grep allowed
+    register: command_output
+    ### i added this show run command just for convenience - it's handy to see the current
+    ### allowed vlan range right before you apply the new one - just in case the trunk
+    ### range gets overwritten - you have the before - right on your screen.
+  
+  - name: task2a disply show run output
+    debug: 
+      msg:  "{{ command_output.stdout_lines }}"
+
+  - name: task3 add vlans to existing trunk
+    cisco.nxos.nxos_l2_interface:      
+      name: port-channel2
+      mode: trunk
+      trunk_vlans: 172,666,1009-1010,3000,3001
+
+  - name: task4 - disply current L2 trunk config from the device
+    cisco.nxos.nxos_command:
+      commands:
+      - show run int port-ch2 | grep allowed
+    register: command_output
+    ### issue show run again to make sure the trunk allowed range looks right
+  
+  - name: task4a disply show run output
+    debug: 
+      msg:  "{{ command_output.stdout_lines }}"
+
+  - name: task05 save configuration
+    nxos_command:
+      commands: copy running-config startup-config
