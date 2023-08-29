@@ -1,0 +1,31 @@
+### ansible-playbook palo_firewall_rule_template.yml -i inventory/Palo/panorama.ini 
+### apply the code to panorama - this give us the chance to manually commit and validate (less risky)
+
+### when ADDING A NEW RULE - adjust your device group, source/dest zone,s etc..
+### use the 'location before/after' syntax based on the rule-set you're tweaking (hio/slc/etc...)
+### if you skip the location statement the new rule just ends up at the bottom of the existing list and you'll probably find that it never gets invoked.
+
+---
+- hosts: all
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+  
+  tasks:
+  - name: task 1 - use ansible to push firewall rule to panorama
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      rule_name: 'informIPaas-to-prc1-sql2000'
+      description: 'Allow Informatica host to reach prod SQL; https://jira.americas.nwea.pvt/browse/IN-8996; Allow informatica to reach adb01.mir; https://jira.americas.nwea.pvt/browse/IN-9127'
+      source_zone: ['WAN']
+      source_ip: ['p1-informIPaas.americas.nwea.pvt']
+      destination_zone: ['Prod']
+      destination_ip: ['prc1-sql2000.nweacolo.pvt', 'adb01.mir.map2.nweacolo.pvt']
+      application: ['mssql-db', 'ping', 'nwea-postgres-Custom']
+      service: ['application-default']
+      group_profile: 'Blocking-and-Alerting-Inbound'
+      action: 'allow'
+      log_start: 'yes'
+     

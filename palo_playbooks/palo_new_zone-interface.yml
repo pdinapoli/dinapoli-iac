@@ -1,0 +1,39 @@
+## Create new zone and interface on palo
+### To Run the playbook with the seed file
+### ansible-playbook palo_new_zone-interface.yml -i inventory/palo/panorama.ini -e "include_vars=core-pan01_seed_new_vlans.yml"
+### Run it against a panorama.ptldor02 then validate the changes on panorama before commiting it to the desired firewall - be very careful!!!!!
+
+---
+
+- hosts: all
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+  
+
+  tasks:
+    - name: include_vars
+      include_vars: "{{ include_vars }}"
+
+    - name: create a zone on a firewall
+      paloaltonetworks.panos.panos_zone:
+        provider: '{{ provider }}'
+        zone: "{{ item.key }}"
+        template: "{{ item.value.template }}"
+        mode: "{{ item.value.mode }}"
+      loop: "{{ panos_zone | dict2items }}" 
+  
+    - name: interface as static in a zone
+      panos_l3_subinterface:
+        provider: '{{ provider }}'
+        name: "{{ item.key }}"
+        template: "{{ item.value.template }}"
+        ip: "{{ item.value.ip }}"
+        enable_dhcp: "{{ item.value.enable_dhcp }}"
+        zone_name: "{{ item.value.zone_name }}"
+        vr_name: "{{ item.value.vr_name }}"
+        vsys: "{{ item.value.vsys }}"
+        tag: "{{ item.value.tag }}"
+        management_profile: "{{ item.value.management_profile }}"
+      loop: "{{ panos_interface | dict2items }}"  

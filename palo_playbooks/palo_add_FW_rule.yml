@@ -1,0 +1,31 @@
+### ansible-playbook palo_firewall_rule_template.yml -i inventory/Palo/panorama.ini 
+### apply the code to panorama - this give us the chance to manually commit and validate (less risky)
+
+### when ADDING A NEW RULE - adjust your device group, source/dest zone,s etc..
+### use the 'location before/after' syntax based on the rule-set you're tweaking (hio/slc/etc...)
+### if you skip the location statement the new rule just ends up at the bottom of the existing list and you'll probably find that it never gets invoked.
+
+---
+- hosts: all
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+  
+  tasks:
+  - name: task 1 - use ansible to push firewall rule to panorama
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-SLC-HA-Pair'
+      rule_name: 'Permit-Jmeter-and-Motherload-to-Perf01'
+      description: 'Allow motherload & Jmeter nodes to SSH to nodes in Perf01 environment to gather data for analysis: Jira: IN-8647, CAB-4097'
+      source_zone: ['Mgmt']
+      source_ip: ['motherload01.mgmt.nweacolo.pvt', 'j-meter-nodes', 'db-perf.mgmt.nweacolo.pvt']
+      destination_zone: ['Perf01']
+      destination_ip: ['any']
+      application: ['ssh', 'ping', 'icmp', 'TCP8080-API-Endpoints']
+      service: ['application-default']
+      action: 'allow'
+      log_start: 'yes'
+      location: 'before'
+      existing_rule: 'Permit-Motherload-to-DB'

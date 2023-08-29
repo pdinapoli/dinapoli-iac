@@ -1,0 +1,18 @@
+### https://jira.americas.nwea.pvt/browse/IN-8959
+### bumping PAN OS from 9.1.11 to 9.1.13-h1
+### plan to move PANs to v.10 during summer maint.
+
+- hosts: '{{ target | default("all") }}'
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+    
+  tasks:
+  - name: Download and install PAN-OS 9.1.13-h1
+    panos_software:
+      provider: '{{ provider }}'
+      version: '9.1.13-h1'
+      sync_to_peer: false
+      install: true
+      restart: true

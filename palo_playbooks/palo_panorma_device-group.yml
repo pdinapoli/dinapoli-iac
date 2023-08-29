@@ -1,0 +1,13 @@
+### playbook to create a device-group in panorma for the purpose of onboarding devices into a group
+- hosts: '{{ target | default("all") }}'
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+
+  tasks:
+  - name: Create device group
+    panos_device_group:
+      name: 'Lab-Device-Group'
+      provider: '{{ provider }}'
+      

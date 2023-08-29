@@ -1,0 +1,45 @@
+### closing out this branch since the basic proof of concept is complete.
+### use this template as a starting point on future firewall rules that you intend to deploy via ansible
+
+### HOW TO USE:
+### ansible-playbook palo_firewall_rule_template.yml -i inventory/Palo/panorama.ini 
+### apply the code to panorama - this give us the chance to manually commit and validate (less risky)
+
+### when ADDING A NEW RULE - adjust your device group, source/dest zone,s etc..
+### use the 'location before/after' syntax based on the rule-set you're tweaking (hio/slc/etc...)
+### if you skip the location statement the new rule just ends up at the bottom of the existing list and you'll probably find that it never gets invoked.
+
+
+- hosts: all
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+  
+  tasks:
+  - name: task 1 - use ansible to push firewall rule to panorama
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: adjust-device-group-accordingly
+      rule_name: 'firewall_rule_name_pushed-via-ansible'
+      description: 'good place to put owner, jira ticket # for future audit'
+      source_zone: ['any']
+      source_ip: ['any']
+      destination_zone: ['any']
+      destination_ip: ['any']
+      application: ['ssh']
+      action: 'allow'
+      location: 'after'
+      existing_rule: 'existing_rule_name'
+
+### sample code - do not edit this - but copy/paste it - use it for your specific ticket.
+### task 2 - uncomment line 44/45 accordingly if you're wanting to remove vs only disable.  chooe your own adventure!
+
+tasks:
+  - name: task 2 - remove unused rule from panorama
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: adjust-device-group-accordingly
+      rule_name: 'specific_rule_name_here'
+      # state: absent
+	  # disabled: 'yes/no'

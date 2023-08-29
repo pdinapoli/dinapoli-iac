@@ -1,0 +1,46 @@
+
+### this ansible-playbook will get a lot of usage over time...intent is to check out - tweak - check back in - run it.
+### INF team member should check out a branch from a jira ticket source
+### add a new task (link it to your ticket for good bread crumb trail)
+### modify the sample code to do the work
+
+### how to run:
+###     ansible-playbook palo_delete_FW_rule.yml -i inventory/Palo/panorama.ini
+
+- hosts: all
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+
+  tasks:
+  - name: https://jira.americas.nwea.pvt/browse/NETSEG-272
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      rule_name: 'Teams-to-Keycloak_SAML'
+      disabled: 'yes'
+
+  - name: https://jira.americas.nwea.pvt/browse/NETSEG-215
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      rule_name: 'Prod-SkillsNav'
+      state: 'absent'
+      ### rule was already in disabled state - so this PR is to nuke it.
+
+  - name: https://jira.americas.nwea.pvt/browse/NETSEG-203
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      rule_name: 'permit-COLO-to-ntp'
+      state: 'absent'
+      ### rule was already in disabled state - so this PR is to nuke it.
+
+  - name: https://jira.americas.nwea.pvt/browse/NETSEG-176
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      rule_name: 'team-envs-to-colo'
+      disabled: 'yes'
+      ### disabling rule first to monitor for a while - delete later
