@@ -1,0 +1,67 @@
+### tweak existing firewall rule "Development Availability Group"
+### https://jira.americas.nwea.pvt/browse/IN-9110
+
+### need to create 3 new address objects - and tag them to the existing dynamic address group
+### technically - this playbook only adds addresses to the existing rule..but using this ticket
+### to ansible-ize this rule.
+
+### https://jira.americas.nwea.pvt/browse/NETSEG-275
+### adding creedence.prd.map2.nweacolo.pvt:8080 endpoint to destination server list
+### address object already exists - so this change adds that hostname to dest_IP list
+
+### HOW TO USE
+### ansible-playbook palo_NetSeg-275_rule_change.yml -i inventory/Palo/panorama.ini
+### this will run against panorama and allow INF-NETWORK to still validate commit/push via panorama.
+
+- hosts: all
+  connection: local
+
+  collections:
+    - paloaltonetworks.panos
+
+  tasks:
+  - name: Create object 'p1-reportingagl.americas.nwea.pvt'
+    panos_address_object:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      name: 'p1-reportingagl.americas.nwea.pvt'
+      address_type: 'fqdn'
+      value: 'p1-reportingagl.americas.nwea.pvt'
+      description: 'p1-reportingagl.americas.nwea.pvt'
+      tag: 'Development Availability Group'
+
+  - name: Create object 'p1-sql200.Americas.nwea.pvt'
+    panos_address_object:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      name: 'p1-sql200.Americas.nwea.pvt'
+      address_type: 'fqdn'
+      value: 'p1-sql200.Americas.nwea.pvt'
+      description: 'p1-sql200.Americas.nwea.pvt'
+      tag: 'Development Availability Group'
+
+  - name: Create object 'p1-sql201.Americas.nwea.pvt'
+    panos_address_object:
+      provider: '{{ provider }}'
+      device_group: 'Net-Seg-HIO-HA-Pair'
+      name: 'p1-sql201.Americas.nwea.pvt'
+      address_type: 'fqdn'
+      value: 'p1-sql201.Americas.nwea.pvt'
+      description: 'p1-sql201.Americas.nwea.pvt'
+      tag: 'Development Availability Group'
+ 
+  - name: task 2 - use ansible to tweak existing rule in panorama
+    panos_security_rule:
+      provider: '{{ provider }}'
+      device_group: Net-Seg-HIO-HA-Pair
+      rule_name: 'Development Availability Group'
+      description: 'provide access from Development Availability Group sql cluster to research mirrors:  Jira-IN-8675, Jira-IN-9110'
+      source_zone: 'WAN'
+      source_ip: 'Development Availability Group'
+      destination_zone: 'Prod'
+      destination_ip: ['norm-colo.prd.map2.nweacolo.pvt', 'res-adb.mir.map2.nweacolo.pvt', 'res-rdb.mir.map2.nweacolo.pvt', 'creedence.prd.map2.nweacolo.pvt' ]
+      application: ['icmp', 'ping', nwea-8080-custom, 'nwea-postgres-custom', 'TCP8080-API-Endpoints' ]
+      action: 'allow'
+      log_start: 'yes'
+      location: 'before'
+      existing_rule: 'GRD_DB_Access'
